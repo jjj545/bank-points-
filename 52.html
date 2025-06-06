@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>活動專頁｜銀行點數全面升級！</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "微軟正黑體", sans-serif;
+      background-color: #121212;
+      color: #eee;
+    }
+    nav {
+      background-color: rgba(26,26,26,0.95);
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0; width:100%; z-index: 1000;
+      display:flex; justify-content: space-between; align-items: center;
+      box-shadow:0 2px 4px rgba(0,0,0,0.7);
+    }
+    nav .nav-links a {
+      color:#ccc; margin:0 1rem; text-decoration:none;
+      transition: color .3s;
+    }
+    nav .nav-links a:hover { color:#e74c3c; }
+    nav .lang-switch { cursor:pointer; color:#ccc; }
+    nav .lang-switch:hover { color:#e74c3c; }
+
+    /* Hero 視差背景 */
+    .hero {
+      height:100vh; background-image: url('https://source.unsplash.com/1600x900/?finance,technology');
+      background-attachment: fixed; background-size:cover; background-position:center;
+      display:flex; flex-direction: column; justify-content:center; align-items:center;
+      text-align: center; padding-top:4rem;
+    }
+    .hero h1 {
+      font-size:3rem; color:#e74c3c; margin-bottom:1rem;
+    }
+    .hero p {
+      font-size:1.2rem; color:#ccc; margin-bottom:2rem;
+    }
+    .hero button {
+      background-color:#e74c3c; color:white; border:none;
+      padding:1rem 2rem; font-size:1rem; border-radius:4px;
+      cursor:pointer; transition: transform .2s, background-color .3s;
+    }
+    .hero button:hover {
+      background-color:#c0392b; transform:scale(1.05);
+    }
+
+    section {
+      max-width:900px; margin:4rem auto; padding:2rem;
+      background-color:#1f1f1f; border-radius:12px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.6);
+      opacity:0; transform:translateY(40px);
+      transition:opacity 1s ease, transform 1s ease;
+    }
+    section.visible { opacity:1; transform:translateY(0); }
+    h2 { color:#e74c3c; }
+    ul {line-height:1.8; color:#ccc;}
+    .highlight {color:#27ae60;font-weight:bold;}
+    #charts { display:flex; flex-wrap:wrap; justify-content: space-around; }
+    #charts canvas { background-color:#2b2b2b; border-radius:8px; margin:1rem; }
+
+    footer { text-align:center; padding:2rem; color:#aaa; }
+    @media(max-width:768px){
+      .hero h1 { font-size:2rem; }
+      nav { flex-direction: column; }
+      nav .nav-links { margin-top:.5rem; }
+      #charts { flex-direction:column; align-items:center;}
+      #charts canvas { width:80% !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div style="font-weight:bold;color:white;">點數升級活動</div>
+    <div class="nav-links">
+      <a href="#intro">活動介紹</a>
+      <a href="#features">特色亮點</a>
+      <a href="#charts">數據統計</a>
+      <a href="#form">報名表單</a>
+      <a href="#contact">聯絡我們</a>
+    </div>
+    <div class="lang-switch" onclick="toggleLang()">EN/中文</div>
+  </nav>
+
+  <div class="hero">
+    <h1 id="typing"></h1>
+    <p id="hero-sub">讓紙本點數變成銀行點，享受更多優惠與回饋！</p>
+    <button onclick="scrollToSection('form')">🚀 <span id="btn-label">立即報名</span></button>
+  </div>
+
+  <section id="intro"><h2 id="intro-title">🎯 活動介紹</h2>
+    <ul>
+      <li id="intro-1">🔹 紙本點數以 <span class="highlight">100:1</span> 兌換為銀行點數。</li>
+      <li id="intro-2">🔹 紙本點數轉換後將暫停使用。</li>
+    </ul>
+    <h3 id="period-title">📅 活動期間</h3>
+    <p id="period-content">即日起至 <span class="highlight">2025 年 8 月 31 日</span>。</p>
+  </section>
+
+  <section id="features"><h2 id="features-title">📣 活動特色</h2>
+    <ul id="features-list">
+      <li>✅ 會員專屬折扣</li>
+      <li>✅ 銀行點數存款享利息</li>
+      <li>✅ 每日抽獎、每週富豪榜</li>
+      <li>✅ 小政策驚喜福利</li>
+    </ul>
+  </section>
+
+  <section id="charts"><h2>📊 活動數據</h2>
+    <div id="charts">
+      <canvas id="pieChart" width="300" height="300"></canvas>
+      <canvas id="barChart" width="300" height="300"></canvas>
+    </div>
+  </section>
+
+  <section id="form"><h2 id="form-title">📋 活動報名表</h2>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe9M-ptQx9EFxszdGl_rFEjypyZ9ThCG7RiGo0poVRdw6VZ0g/viewform?embedded=true"></iframe>
+  </section>
+
+  <section id="contact"><h2 id="contact-title">📞 聯絡我們</h2>
+    <p id="contact-content">如有疑問，請洽 <span class="highlight">詹凡葦</span> 獲得協助。</p>
+  </section>
+
+  <footer>© 2025 銀行點數活動頁 • All Rights Reserved.</footer>
+
+  <script>
+    // 打字效果
+    const txt = { zh: "🌟 點數全面升級，開啟全新回饋時代！", en: "🌟 Points Upgrade Event – Redeem & Reward Like Never Before!" };
+    const typingEl = document.getElementById("typing");
+    let idx=0, lang="zh";
+    function typeAnim(){
+      const str = txt[lang];
+      typingEl.textContent = str.slice(0, idx++);
+      if(idx<=str.length) setTimeout(typeAnim, 80);
+    }
+    typeAnim();
+
+    // 滑動事件顯示
+    const sec = document.querySelectorAll("section");
+    function showOnScroll(){
+      const trigger = window.innerHeight * 0.85;
+      sec.forEach(s=>{
+        if(s.getBoundingClientRect().top < trigger) s.classList.add("visible");
+      });
+    }
+    window.addEventListener("scroll", showOnScroll);
+    window.addEventListener("load", showOnScroll);
+    function scrollToSection(id){
+      document.getElementById(id).scrollIntoView({behavior:"smooth"});
+    }
+
+    // 語言切換
+    const dict = {
+      en: {
+        "立即報名": "Register Now",
+        "活動介紹":"Event Intro",
+        "特色亮點":"Features",
+        "報名表單":"Sign-Up Form",
+        "聯絡我們":"Contact Us",
+        "🎯 活動介紹":"🎯 Event Overview",
+        "📣 活動特色":"📣 Event Features",
+        "📊 活動數據":"📊 Event Data",
+        "📋 活動報名表":"📋 Registration",
+        "📞 聯絡我們":"📞 Contact Us",
+        "讓紙本點數變成銀行點，享受更多優惠與回饋！":"Turn paper points into bank points & enjoy exclusive rewards!"
+      }
+    };
+    function toggleLang(){
+      lang = lang==="zh"?"en":"zh";
+      idx=0; typingEl.textContent="";
+      typeAnim();
+      document.getElementById("btn-label").textContent = dict.en["立即報名"];
+      document.querySelectorAll('.nav-links a').forEach((a,i)=>{
+        const keys = ["活動介紹","特色亮點","活動數據","報名表單","聯絡我們"];
+        a.textContent = dict.en[keys[i]];
+      });
+      document.getElementById("hero-sub").textContent = dict.en["讓紙本點數變成銀行點，享受更多優惠與回饋！"];
+      ["intro-title","features-title","form-title","contact-title"].forEach(id=>{
+        document.getElementById(id).textContent = dict.en[document.getElementById(id).textContent.replace(/[\u{1F300}-\u{1F6FF}]/gu,"")];
+      });
+      document.querySelector("#charts h2").textContent = dict.en["📊 活動數據"];
+    }
+
+    // Chart.js 初始化
+    const pieCtx = document.getElementById("pieChart").getContext("2d");
+    const barCtx = document.getElementById("barChart").getContext("2d");
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['已報名', '尚未報名'],
+        datasets: [{ data: [60, 40], backgroundColor: ['#e74c3c','#27ae60'] }]
+      }
+    });
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['會員折扣', '每日抽獎', '利息回饋', '富豪榜'],
+        datasets: [{
+          label: '系列活動參與度',
+          data: [150, 120, 90, 60],
+          backgroundColor: '#00bcd4'
+        }]
+      },
+      options:{ scales: { y: { beginAtZero: true } } }
+    });
+  </script>
+
+</body>
+</html>
