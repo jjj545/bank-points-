@@ -4,114 +4,166 @@
   <meta charset="UTF-8">
   <title>銀行點數升級｜活動官網</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    html { scroll-behavior: smooth; }
-    body { margin:0; font-family:"微軟正黑體",sans-serif; background:#f0f0f0; color:#333; }
-
-    nav {
-      position:fixed; top:0; width:100%; background:#333;
-      display:flex; justify-content:space-between; align-items:center;
-      padding:1rem 2rem; z-index:1000;
-    }
-    nav .brand { color:#FFD700; font-weight:700; font-size:1.2rem; }
-    nav .links a, nav .lang { color:#ccc; margin:0 0.8rem; text-decoration:none; cursor:pointer; }
-    nav .links a:hover, nav .lang:hover { color:#FFD700; }
-
-    .hero {
-      height:100vh; padding-top:4rem;
-      background-image:url('https://source.unsplash.com/1600x900/?gold,finance');
-      background-attachment:fixed; background-size:cover; background-position:center;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      text-align:center;
-    }
-    .hero h1 { font-size:3rem; color:#FFD700; margin-bottom:0.5rem; }
-    .hero p { font-size:1.2rem; color:#fff; margin-bottom:1.5rem; text-shadow:1px 1px 4px rgba(0,0,0,0.7); }
-    .hero button {
-      background:#FFD700; border:none; padding:1rem 2rem; font-size:1rem;
-      border-radius:4px; cursor:pointer; transition:transform .3s;
-    }
-    .hero button:hover { transform:scale(1.05); }
-
-    section {
-      max-width:900px; margin:4rem auto; padding:2rem;
-      background:#fff; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);
-      opacity:0; transform:translateY(40px);
-      transition:opacity 1s, transform 1s;
-    }
-    section.visible { opacity:1; transform:translateY(0); }
-    h2 { border-left:5px solid #FFD700; padding-left:0.5rem; color:#333; }
-    ul { line-height:1.8; }
-
-    #charts { display:flex; flex-wrap:wrap; justify-content:space-around; }
-    #charts canvas { max-width:320px; margin:1rem; background:#fafafa; border-radius:6px; }
-
-    iframe { width:100%; height:600px; border:none; border-radius:6px; }
-
-    footer {
-      text-align:center; padding:2rem; color:#666;
-      font-size:0.9rem;
-    }
-
+    html {scroll-behavior: smooth;}
+    body {margin:0; font-family:"微軟正黑體",sans-serif; background:#f9f5e6; color:#000;}
+    nav {position:fixed;top:0;width:100%;background:#fff7cc;display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;box-shadow:0 2px 4px rgba(0,0,0,0.1);z-index:1000;}
+    nav .brand {font-weight:700;font-size:1.2rem;}
+    nav .links a, nav .lang {color:#000;margin:0 0.8rem;text-decoration:none;cursor:pointer;transition:color .3s;}
+    nav .links a:hover, nav .lang:hover {color:#ffb600;}
+    .hero {height:100vh;padding-top:4rem;background-image:url('https://source.unsplash.com/1600x900/?gold,finance');background-attachment:fixed;background-size:cover;background-position:center;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+    .hero h1 {font-size:3rem;color:#ffb600;text-shadow:1px 1px 4px rgba(0,0,0,0.2);margin-bottom:0.5rem;}
+    .hero p {font-size:1.2rem;color:#000;text-shadow:1px 1px 3px rgba(255,255,255,0.6);margin-bottom:1.5rem;}
+    .hero button {background:#ffb600;border:none;padding:1rem 2rem;font-size:1rem;border-radius:4px;cursor:pointer;transition:transform .3s;}
+    .hero button:hover {transform:scale(1.05);}
+    section {max-width:900px;margin:4rem auto;padding:2rem;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.05);opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1s;}
+    section.visible {opacity:1;transform:translateY(0);}
+    h2 {border-left:5px solid #ffb600;padding-left:0.5rem;margin-bottom:1rem;}
+    ul {line-height:1.8;}
+    #charts {display:flex;flex-wrap:wrap;justify-content:space-around;}
+    #charts canvas {max-width:320px;margin:1rem;background:#fff7cc;border-radius:6px;}
+    iframe {width:100%;height:600px;border:none;border-radius:6px;}
+    .btn-consult {background-color:#ffeb3b;color:#000;border:none;padding:1rem 2rem;font-size:1rem;font-weight:bold;border-radius:5px;cursor:pointer;transition:all .2s;box-shadow:0 4px 0 #d4c000;}
+    .btn-consult:hover {background-color:#fff176;transform:translateY(-2px);box-shadow:0 6px 8px rgba(0,0,0,0.2);}
+    .gdpr {background:#fff7cc;padding:1rem 2rem;border-radius:6px;margin:2rem auto;max-width:900px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+    .gdpr h3 {margin-top:0;}
+    .version {cursor:pointer;color:#000;text-decoration:underline;margin-top:1rem;}
+    .changelog {display:none;background:#eee;padding:1rem;margin-top:0.5rem;border-radius:4px;}
+    footer {text-align:center;padding:2rem;background:#fff7cc;color:#666;font-size:0.9rem;}
     @media(max-width:768px){
-      .hero h1 { font-size:2.2rem; }
-      nav { flex-direction:column; }
-      nav .links { margin-top:.5rem; }
-      #charts { flex-direction:column; align-items:center; }
-      #charts canvas { width:90% !important; }
+      .hero h1 {font-size:2.2rem;}
+      nav {flex-direction:column;}
+      nav .links {margin-top:.5rem;}
+      #charts {flex-direction:column;align-items:center;}
+      #charts canvas {width:90% !important;}
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div class="brand">銀行點數升級活動</div>
-    <div class="links">
-      <a href="#intro">活動介紹</a>
-      <a href="#features">特色亮點</a>
-      <a href="#charts">數據統計</a>
-      <a href="#form">報名表</a>
-      <a href="#contact">聯絡我們</a>
-    </div>
-    <div class="lang" onclick="toggleLang()">EN / 中文</div>
-  </nav>
-
-  <div class="hero">
-    <h1 id="typing"></h1>
-    <p id="hero-sub">將紙本點數升級成銀行點，享尊榮禮遇！</p>
-    <button onclick="scrollTo('form')"><span id="btn-label">🚀 立即報名</span></button>
+<nav>
+  <div class="brand">銀行點數升級活動</div>
+  <div class="links">
+    <a href="#home">Home</a>
+    <a href="#about">介紹</a>
+    <a href="#features">特色</a>
+    <a href="#charts">數據</a>
+    <a href="#form">報名</a>
+    <a href="#inquiry">諮詢</a>
+    <a href="#gdpr">隱私</a>
   </div>
+  <div class="lang" onclick="toggleLang()">EN / 中文</div>
+</nav>
 
-  <section id="intro">
-    <h2 id="intro-title">🎯 活動介紹</h2>
+<div id="home" class="hero">
+  <h1 id="typing"></h1>
+  <p id="hero-sub">將紙本點數升級成銀行點，享受尊榮禮遇！</p>
+  <button onclick="scrollTo('form')"><span id="btn-label">🚀 立即報名</span></button>
+</div>
+
+<section id="about">
+  <h2>🎯 活動介紹</h2>
+  <ul>
+    <li>紙本點數以 <strong>100:1</strong> 比例兌換為銀行點。</li>
+    <li>轉換後紙本點數將停止使用。</li>
+  </ul>
+  <p>📅 活動期間：至 2025‑08‑31</p>
+</section>
+
+<section id="features">
+  <h2>📣 活動特色</h2>
+  <ul>
+    <li>會員專屬折扣</li>
+    <li>銀行點數享利息加成</li>
+    <li>每日抽獎、每週富豪榜、驚喜福利</li>
+  </ul>
+</section>
+
+<section id="charts">
+  <h2>📊 活動數據</h2>
+  <canvas id="pieChart"></canvas>
+  <canvas id="barChart"></canvas>
+</section>
+
+<section id="form">
+  <h2>📋 活動報名表</h2>
+  <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe9M-ptQx9EFxszdGl_rFEjypyZ9ThCG7RiGo0poVRdw6VZ0g/viewform?embedded=true"></iframe>
+</section>
+
+<section id="inquiry">
+  <h2>🗨️ 諮詢我們</h2>
+  <p>有任何疑問歡迎來信：</p>
+  <a href="mailto:yses0327.my.work@gmail.com"><button class="btn-consult">立即諮詢</button></a>
+</section>
+
+<section id="gdpr">
+  <div class="gdpr">
+    <h3>🛡️ 隱私政策與 GDPR 條款</h3>
+    <p>我們重視您的隱私，所有填寫之資料僅用於活動報名與聯絡，不會用於其他用途。如需了解詳情請聯絡我們。</p>
+  </div>
+  <div class="version" onclick="toggleChangelog()">版本：v1.0.0（點此查看版本記錄）</div>
+  <div class="changelog">
     <ul>
-      <li>紙本點數以 <strong>100:1</strong> 比例兌換為銀行點。</li>
-      <li>轉換後紙本點數即停止使用。</li>
+      <li>v1.0.0 – 初版上線：包含主頁、活動介紹、特色亮點、數據圖表、報名表單、諮詢功能、GDPR 條款、版本查詢</li>
     </ul>
-    <p>📅 活動期間：至 2025‑08‑31</p>
-  </section>
+  </div>
+</section>
 
-  <section id="features">
-    <h2 id="features-title">📣 活動特色</h2>
-    <ul>
-      <li>會員專屬折扣</li>
-      <li>銀行點數享利息加成</li>
-      <li>每日抽獎、每週富豪榜、驚喜福利</li>
-    </ul>
-  </section>
+<footer>© 2025 銀行點數活動專頁 • All Rights Reserved.</footer>
 
-  <section id="charts">
-    <h2 id="charts-title">📊 活動數據</h2>
-    <canvas id="pieChart"></canvas>
-    <canvas id="barChart"></canvas>
-  </section>
+<script>
+  const texts = {
+    zh: "🌟 點數升級，尊榮再進化！",
+    en: "🌟 Points Upgrade Event – Elevate Your Rewards!"
+  };
+  let lang='zh', idx=0;
+  function typeAnim() {
+    const str = texts[lang];
+    document.getElementById('typing').textContent = str.slice(0, idx++);
+    if(idx<=str.length) setTimeout(typeAnim, 80);
+  }
+  typeAnim();
 
-  <section id="form">
-    <h2 id="form-title">📋 活動報名表</h2>
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe9M-ptQx9EFxszdGl_rFEjypyZ9ThCG7RiGo0poVRdw6VZ0g/viewform?embedded=true"></iframe>
-  </section>
+  const secs=document.querySelectorAll('section');
+  function scrollAnim(){secs.forEach(s=>s.getBoundingClientRect().top<window.innerHeight*0.75&&s.classList.add('visible'));}
+  window.addEventListener('load',scrollAnim);
+  window.addEventListener('scroll',scrollAnim);
+  function scrollTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
 
-  <section id="contact">
-    <h2 id="contact-title">📞 聯絡我們</h2>
-    <p>
+  function toggleLang(){
+    lang=lang==='zh'?'en':'zh'; idx=0; document.getElementById('typing').textContent='';
+    typeAnim();
+    document.getElementById('btn-label').textContent= lang==='zh'?'🚀 立即報名':'🚀 Register Now';
+    const navMap = {zh:['Home','介紹','特色','數據','報名','諮詢','隱私'], en:['Home','Intro','Features','Data','Sign‑Up','Inquiry','Privacy']};
+    document.querySelectorAll('.links a').forEach((a,i)=>a.textContent=navMap[lang][i]);
+    document.getElementById('hero-sub').textContent=lang==='zh'?'將紙本點數升級成銀行點，享受尊榮禮遇！':'Turn paper points into bank points & enjoy exclusive benefits!';
+    const titles = {
+      intro: lang==='zh'?'🎯 活動介紹':'🎯 Event Intro',
+      features: lang==='zh'?'📣 活動特色':'📣 Event Features',
+      charts: lang==='zh'?'📊 活動數據':'📊 Statistics',
+      form: lang==='zh'?'📋 報名表單':'📋 Registration',
+      inquiry: lang==='zh'?'🗨️ 諮詢我們':'🗨️ Inquiry',
+      gdpr: lang==='zh'?'🛡️ 隱私政策':'🛡️ Privacy Policy'
+    };
+    Object.keys(titles).forEach(id=>document.querySelector('#'+id+' h2, #'+id+' h3').textContent=titles[id]);
+  }
+
+  function toggleChangelog(){
+    const el = document.querySelector('.changelog');
+    el.style.display = el.style.display==='block'?'none':'block';
+  }
+
+  new Chart(document.getElementById('pieChart'),{
+    type:'pie',data:{
+      labels:[lang==='zh'?'已報名':'Registered',lang==='zh'?'未報名':'Not Registered'],
+      datasets:[{data:[45,55],backgroundColor:['#ffb600','#333']}]
+    }
+  });
+  new Chart(document.getElementById('barChart'),{
+    type:'bar',data:{
+      labels:lang==='zh'?['折扣','抽獎','利息','富豪榜']:['Discount','Lottery','Interest','Leaderboard'],
+      datasets:[{label:lang==='zh'?'參與人數':'Participants',data:[120,90,60,30],backgroundColor:'#ffb600'}]
+    },options:{ scales:{ y:{ beginAtZero:true }}}
+  });
+</script>
